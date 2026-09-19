@@ -12,5 +12,5 @@ description = "C and C++ bindings for Radial Response Code (RRC) via cbindgen"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [dependencies]
-rrc-core = { path = "../rrc-core" }
+rrc-core = { path = "../rrc-core", version = "0.1.0" }
 libc = "0.2"
