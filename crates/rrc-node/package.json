@@ -1,17 +1,14 @@
 {
-  "name": "@mdsagormunshi/rrc-node",
+  "name": "rrc-js",
   "version": "0.1.0",
-  "description": "High-performance Node.js bindings for Radial Response Code (RRC)",
+  "description": "High-performance JavaScript & Node.js bindings for Radial Response Code (RRC)",
   "main": "index.js",
   "types": "index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  },
   "author": "Ryan Shelby <MdSagorMunshi>",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MdSagorMunshi/rrc.git"
+    "url": "git+https://github.com/MdSagorMunshi/rrc.git"
   },
   "keywords": [
     "rrc",
