@@ -1,12 +1,12 @@
 namespace rrc {
     [Throws=RrcKotlinError]
-    string encode_svg(sequence<u8> data, string ecc_level, u8? version);
+    string encode_svg(bytes data, string ecc_level, u8? version);
 
     [Throws=RrcKotlinError]
-    sequence<u8> encode_png(sequence<u8> data, string ecc_level, u8? version);
+    bytes encode_png(bytes data, string ecc_level, u8? version);
 
     [Throws=RrcKotlinError]
-    DecodeResult decode_rgba(sequence<u8> rgba, u32 width, u32 height, u8? expected_version);
+    DecodeResult decode_rgba(bytes rgba, u32 width, u32 height, u8? expected_version);
 
     [Throws=RrcKotlinError]
     VersionInfo get_version_info(u8 version);
@@ -20,7 +20,7 @@ enum RrcKotlinError {
 };
 
 dictionary DecodeResult {
-    sequence<u8> payload;
+    bytes payload;
     string? text;
     u8 version;
     string ecc_level;
