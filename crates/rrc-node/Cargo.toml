@@ -1,0 +1,20 @@
+[package]
+name = "rrc-node"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+description = "Node.js binding for Radial Response Code (RRC) via napi-rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rrc-core = { path = "../rrc-core" }
+napi = { version = "3.1", default-features = false, features = ["napi4", "async"] }
+napi-derive = "3.1"
+
+[build-dependencies]
+napi-build = "2"

@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/rrc-core",
+    "crates/rrc-cli",
+    "crates/rrc-node",
+    "crates/rrc-cpp",
+    "crates/rrc-kotlin",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Ryan Shelby <github.com/MdSagorMunshi>"]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/MdSagorMunshi/rrc"
+homepage = "https://github.com/MdSagorMunshi/rrc"
+readme = "README.md"
+description = "RRC (Radial Response Code) — An original polar two-dimensional optical code format and scanner system"

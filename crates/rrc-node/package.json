@@ -1,0 +1,35 @@
+{
+  "name": "@rrc/node",
+  "version": "0.1.0",
+  "description": "High-performance Node.js bindings for Radial Response Code (RRC)",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "Ryan Shelby <MdSagorMunshi>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MdSagorMunshi/rrc.git"
+  },
+  "keywords": [
+    "rrc",
+    "radial-response-code",
+    "barcode",
+    "optical-code",
+    "polar-code",
+    "computer-vision"
+  ],
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  },
+  "napi": {
+    "name": "rrc-node",
+    "triples": {
+      "defaults": true,
+      "additional": []
+    }
+  }
+}

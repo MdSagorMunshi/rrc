@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" style="background:#0A0A0A; font-family:'JetBrains Mono', monospace, sans-serif;">
+  <defs>
+    <!-- Radial Gradients -->
+    <radialGradient id="neonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00FF94" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#00FF94" stop-opacity="0.0" />
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Ambience -->
+  <rect width="1000" height="1000" fill="#0A0A0A"/>
+  <circle cx="500" cy="500" r="450" fill="url(#neonGlow)"/>
+
+  <!-- Title & Legend Header -->
+  <text x="50" y="55" fill="#00FF94" font-size="24" font-weight="bold" letter-spacing="2">RADIAL RESPONSE CODE (RRC)</text>
+  <text x="50" y="82" fill="#888888" font-size="13">SYMBOLOGY ANATOMY &amp; GEOMETRIC LAYOUT SPECIFICATION</text>
+
+  <!-- Central Symbol Group (Center cx=500, cy=500, Unit scale = 20px) -->
+  <g id="rrc-symbol">
+    <!-- Quiet Zone Outer Perimeter (R = 16.0 units = 320px) -->
+    <circle cx="500" cy="500" r="340" fill="none" stroke="#222222" stroke-width="1" stroke-dasharray="4,4"/>
+
+    <!-- Termination Ring (R = 13.5 to 14.0 units = 270px to 280px) -->
+    <circle cx="500" cy="500" r="280" fill="none" stroke="#00FF94" stroke-width="8" opacity="0.9"/>
+
+    <!-- Data Ring 2 (R = 10.0 to 11.0 units = 200px to 220px) -->
+    <!-- Sample sectors -->
+    <circle cx="500" cy="500" r="220" fill="none" stroke="#1F2937" stroke-width="1"/>
+    <circle cx="500" cy="500" r="200" fill="none" stroke="#1F2937" stroke-width="1"/>
+
+    <!-- Data Ring 1 (R = 9.0 to 10.0 units = 180px to 200px) -->
+    <circle cx="500" cy="500" r="180" fill="none" stroke="#1F2937" stroke-width="1"/>
+
+    <!-- Ring 0: Format Word Ring (R = 8.0 to 9.0 units = 160px to 180px) -->
+    <circle cx="500" cy="500" r="170" fill="none" stroke="#00E5FF" stroke-width="18" stroke-dasharray="6,4" opacity="0.65"/>
+    <circle cx="500" cy="500" r="160" fill="none" stroke="#00E5FF" stroke-width="1"/>
+    <circle cx="500" cy="500" r="180" fill="none" stroke="#00E5FF" stroke-width="1"/>
+
+    <!-- Quiet Ring (R = 7.0 to 8.0 units = 140px to 160px) -->
+    <circle cx="500" cy="500" r="150" fill="none" stroke="#333333" stroke-width="20" opacity="0.3"/>
+
+    <!-- Bullseye 7 Zones (R = 1.0 to 7.0 units = 20px to 140px) -->
+    <!-- Zone 6 (R=6 to 7 units, 120 to 140px): Dark -->
+    <circle cx="500" cy="500" r="130" fill="none" stroke="#00FF94" stroke-width="20"/>
+    <!-- Zone 5 (R=5 to 6 units, 100 to 120px): Light -->
+    <!-- Zone 4 (R=4 to 5 units, 80 to 100px): Dark -->
+    <circle cx="500" cy="500" r="90" fill="none" stroke="#00FF94" stroke-width="20"/>
+    <!-- Zone 3 (R=3 to 4 units, 60 to 80px): Light -->
+    <!-- Zone 2 (R=2 to 3 units, 40 to 60px): Dark -->
+    <circle cx="500" cy="500" r="50" fill="none" stroke="#00FF94" stroke-width="20"/>
+    <!-- Zone 1 (R=1 to 2 units, 20 to 40px): Light -->
+    <!-- Zone 0 (R=0 to 1 units, 0 to 20px): Dark Solid Core -->
+    <circle cx="500" cy="500" r="20" fill="#00FF94"/>
+
+    <!-- Angular Rays (0 deg, 90 deg, 180 deg, 270 deg) -->
+    <line x1="500" y1="500" x2="500" y2="120" stroke="#FF0055" stroke-width="2" stroke-dasharray="3,3"/>
+    <line x1="500" y1="500" x2="880" y2="500" stroke="#444444" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="500" y1="500" x2="500" y2="880" stroke="#00E5FF" stroke-width="2" stroke-dasharray="3,3"/>
+    <line x1="500" y1="500" x2="120" y2="500" stroke="#444444" stroke-width="1" stroke-dasharray="2,2"/>
+  </g>
+
+  <!-- Sector 0 Highlight (0 deg gap) -->
+  <circle cx="500" cy="330" r="7" fill="#FF0055" filter="url(#glow)"/>
+  <!-- Sector 36 Highlight (180 deg mirrored gap) -->
+  <circle cx="500" cy="670" r="7" fill="#00E5FF" filter="url(#glow)"/>
+
+  <!-- Annotation Callouts -->
+  <!-- 1. Bullseye Finder -->
+  <path d="M 500,500 L 330,420 L 120,420" fill="none" stroke="#00FF94" stroke-width="1.5"/>
+  <circle cx="500" cy="500" r="3" fill="#00FF94"/>
+  <text x="120" y="405" fill="#00FF94" font-size="13" font-weight="bold">1. BULLSEYE FINDER PATTERN</text>
+  <text x="120" y="425" fill="#AAAAAA" font-size="11">7 Concentric Zones (1:1:1:1:1:1:1)</text>
+  <text x="120" y="440" fill="#666666" font-size="10">Subpixel centroid refinement &amp; unit calibration</text>
+
+  <!-- 2. Quiet Ring -->
+  <path d="M 400,400 L 300,320 L 120,320" fill="none" stroke="#888888" stroke-width="1.5"/>
+  <circle cx="400" cy="400" r="3" fill="#888888"/>
+  <text x="120" y="305" fill="#CCCCCC" font-size="13" font-weight="bold">2. CONCENTRIC QUIET RING</text>
+  <text x="120" y="325" fill="#AAAAAA" font-size="11">Zone r ∈ [7.0, 8.0] (All Light Modules)</text>
+  <text x="120" y="340" fill="#666666" font-size="10">Guarantees isolation of finder from data rings</text>
+
+  <!-- 3. Primary Reference Gap & Format Word 1 -->
+  <path d="M 500,330 L 620,240 L 780,240" fill="none" stroke="#FF0055" stroke-width="1.5"/>
+  <text x="780" y="225" fill="#FF0055" font-size="13" font-weight="bold">3. PRIMARY REF GAP &amp; FORMAT WORD 1</text>
+  <text x="780" y="245" fill="#AAAAAA" font-size="11">Ring 0, Sector 0 (0°) + BCH(16, 5) [Sectors 1..16]</text>
+  <text x="780" y="260" fill="#666666" font-size="10">Encodes ECC level (2b) &amp; Mask index (3b)</text>
+
+  <!-- 4. Mirrored Reference Gap & Format Word 2 -->
+  <path d="M 500,670 L 620,760 L 780,760" fill="none" stroke="#00E5FF" stroke-width="1.5"/>
+  <text x="780" y="745" fill="#00E5FF" font-size="13" font-weight="bold">4. MIRRORED FORMAT WORD (180°)</text>
+  <text x="780" y="765" fill="#AAAAAA" font-size="11">Ring 0, Sector 36 (180°) + Identical BCH(16, 5)</text>
+  <text x="780" y="780" fill="#666666" font-size="10">Provides 100% format redundancy against damage</text>
+
+  <!-- 5. Concentric Data Rings -->
+  <path d="M 690,440 L 750,400 L 820,400" fill="none" stroke="#FFB800" stroke-width="1.5"/>
+  <circle cx="690" cy="440" r="3" fill="#FFB800"/>
+  <text x="820" y="390" fill="#FFB800" font-size="13" font-weight="bold">5. CONCENTRIC DATA RINGS</text>
+  <text x="820" y="408" fill="#AAAAAA" font-size="11">Rings k ∈ [1, K-1] with Sk ∈ Divisors(360)</text>
+  <text x="820" y="423" fill="#666666" font-size="10">Reed-Solomon interleaved codewords over GF(2^8)</text>
+
+  <!-- 6. Outer Termination Ring -->
+  <path d="M 500,780 L 400,860 L 150,860" fill="none" stroke="#00FF94" stroke-width="1.5"/>
+  <circle cx="500" cy="780" r="3" fill="#00FF94"/>
+  <text x="150" y="845" fill="#00FF94" font-size="13" font-weight="bold">6. TERMINATION RING</text>
+  <text x="150" y="865" fill="#AAAAAA" font-size="11">Solid outer boundary ring (width = 0.5 units)</text>
+  <text x="150" y="880" fill="#666666" font-size="10">Prevents background bleed &amp; bounds polar space</text>
+
+  <!-- Bottom Metadata Footer -->
+  <rect x="50" y="930" width="900" height="40" rx="4" fill="#141414" stroke="#222222"/>
+  <text x="70" y="955" fill="#666666" font-size="11">AUTHOR: <tspan fill="#CCCCCC">Ryan Shelby (MdSagorMunshi)</tspan></text>
+  <text x="360" y="955" fill="#666666" font-size="11">LICENSE: <tspan fill="#CCCCCC">Apache-2.0</tspan></text>
+  <text x="560" y="955" fill="#666666" font-size="11">VERSIONS: <tspan fill="#CCCCCC">1 to 40 (Polar Interleaved)</tspan></text>
+  <text x="810" y="955" fill="#00FF94" font-size="11" font-weight="bold">RFC 2026 SPEC</text>
+</svg>

@@ -1,0 +1,14 @@
+/target
+**/*.rs.bk
+*.png
+*.jpg
+*.jpeg
+*.svg
+!spec/diagrams/*.svg
+.DS_Store
+node_modules/
+dist/
+build/
+.gradle/
+.vscode/
+.idea/

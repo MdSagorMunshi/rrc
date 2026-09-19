@@ -1,0 +1,20 @@
+[package]
+name = "rrc-kotlin"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+description = "Kotlin/Android bindings for Radial Response Code (RRC) via UniFFI"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+rrc-core = { path = "../rrc-core" }
+uniffi = { version = "0.29", default-features = false }
+thiserror = "2.0"
+
+[build-dependencies]
+uniffi = { version = "0.29", features = ["build"] }

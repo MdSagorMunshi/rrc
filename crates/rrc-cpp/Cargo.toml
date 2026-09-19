@@ -1,0 +1,16 @@
+[package]
+name = "rrc-cpp"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+description = "C and C++ bindings for Radial Response Code (RRC) via cbindgen"
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+rrc-core = { path = "../rrc-core" }
+libc = "0.2"

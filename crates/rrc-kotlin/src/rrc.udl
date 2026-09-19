@@ -1,0 +1,36 @@
+namespace rrc {
+    [Throws=RrcKotlinError]
+    string encode_svg(sequence<u8> data, string ecc_level, u8? version);
+
+    [Throws=RrcKotlinError]
+    sequence<u8> encode_png(sequence<u8> data, string ecc_level, u8? version);
+
+    [Throws=RrcKotlinError]
+    DecodeResult decode_rgba(sequence<u8> rgba, u32 width, u32 height, u8? expected_version);
+
+    [Throws=RrcKotlinError]
+    VersionInfo get_version_info(u8 version);
+};
+
+[Error]
+enum RrcKotlinError {
+    "EncodeError",
+    "DecodeError",
+    "InvalidParameter",
+};
+
+dictionary DecodeResult {
+    sequence<u8> payload;
+    string? text;
+    u8 version;
+    string ecc_level;
+    string mode;
+};
+
+dictionary VersionInfo {
+    u8 version;
+    u32 ring_count;
+    u32 total_data_bits;
+    u32 total_codewords;
+    u32 capacity_bytes_m;
+};
