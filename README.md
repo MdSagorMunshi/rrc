@@ -12,6 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-00FF94?style=for-the-badge&logo=apache&logoColor=black" alt="License"></a>
   <a href="SPEC.md"><img src="https://img.shields.io/badge/Specification-RFC_2026--RRC-00E5FF?style=for-the-badge&logo=readme&logoColor=black" alt="Spec"></a>
+  <a href="INTEGRATION.md"><img src="https://img.shields.io/badge/Guide-Integration_&_Usage-FF0055?style=for-the-badge&logo=bookstack&logoColor=white" alt="Integration Guide"></a>
   <a href="https://github.com/MdSagorMunshi"><img src="https://img.shields.io/badge/Author-Ryan_Shelby-FFB800?style=for-the-badge&logo=github&logoColor=black" alt="Author"></a>
 </p>
 
