@@ -74,7 +74,7 @@ pub fn sample_bilinear(gray: &[u8], width: u32, height: u32, x: f64, y: f64) -> 
     top * (1.0 - fy) + bot * fy
 }
 
-/// Locate the center bullseye finder pattern using 8-directional radial contrast scans.
+/// Locate the center bullseye finder pattern using 8-directional radial contrast scans with multi-threshold candidate evaluation.
 pub fn find_bullseye(gray: &[u8], width: u32, height: u32) -> Result<BullseyeLocation, RrcError> {
     let w = width as usize;
     let h = height as usize;
@@ -82,12 +82,44 @@ pub fn find_bullseye(gray: &[u8], width: u32, height: u32) -> Result<BullseyeLoc
         return Err(RrcError::ImageTooSmall { width, height });
     }
 
-    // Compute basic threshold
+    let min_b = *gray.iter().min().unwrap_or(&0) as f64;
+    let max_b = *gray.iter().max().unwrap_or(&255) as f64;
+    if (max_b - min_b) < 15.0 {
+        return Err(RrcError::NotFound);
+    }
+
     let mut sum = 0u64;
     for &b in gray {
         sum += b as u64;
     }
-    let threshold = (sum / (gray.len() as u64)) as f64;
+    let mean_thresh = (sum / (gray.len() as u64)) as f64;
+    let mid_thresh = (min_b + max_b) * 0.5;
+
+    let mut thresholds = vec![mid_thresh];
+    if (mean_thresh - mid_thresh).abs() > 10.0 {
+        thresholds.push(mean_thresh);
+    }
+    thresholds.push(min_b * 0.35 + max_b * 0.65);
+    thresholds.push(min_b * 0.65 + max_b * 0.35);
+
+    let mut best_overall: Option<BullseyeLocation> = None;
+    for threshold in thresholds {
+        if let Ok(loc) = find_bullseye_at_threshold(gray, width, height, threshold) {
+            if best_overall.as_ref().map_or(true, |b| loc.score > b.score) {
+                best_overall = Some(loc);
+                if loc.score >= 5.0 {
+                    break;
+                }
+            }
+        }
+    }
+
+    best_overall.ok_or(RrcError::NotFound)
+}
+
+fn find_bullseye_at_threshold(gray: &[u8], width: u32, height: u32, threshold: f64) -> Result<BullseyeLocation, RrcError> {
+    let w = width as usize;
+    let h = height as usize;
 
     // 8 ray directions (normalized vectors)
     let inv_sqrt2 = std::f64::consts::FRAC_1_SQRT_2;
