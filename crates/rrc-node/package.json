@@ -1,5 +1,5 @@
 {
-  "name": "rrc-js",
+  "name": "radial-response-code",
   "version": "0.1.0",
   "description": "High-performance JavaScript & Node.js bindings for Radial Response Code (RRC)",
   "main": "index.js",

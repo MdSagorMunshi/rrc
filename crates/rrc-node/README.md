@@ -1,4 +1,4 @@
-# rrc-js (Radial Response Code)
+# radial-response-code (RRC)
 
 High-performance JavaScript, TypeScript & Node.js bindings for **Radial Response Code (RRC)** — an original polar 2D optical code format with 360-degree rotation invariance, concentric annular data rings, and Reed-Solomon error correction over $\text{GF}(2^8)$.
 
@@ -7,13 +7,13 @@ Powered by Rust and N-API (`napi-rs`).
 ## Installation
 
 ```bash
-npm install rrc-js
+npm install radial-response-code
 ```
 
 ## Quick Start (TypeScript / ESM)
 
 ```typescript
-import { encodeSvg, encodePng, decodeRgba, getVersionInfo } from 'rrc-js';
+import { encodeSvg, encodePng, decodeRgba, getVersionInfo } from 'radial-response-code';
 import * as fs from 'fs';
 
 // Query version capacity specs
