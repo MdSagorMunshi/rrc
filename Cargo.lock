@@ -704,7 +704,7 @@ checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
 name = "rrc-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "clap",
  "image",
@@ -714,7 +714,7 @@ dependencies = [
 
 [[package]]
 name = "rrc-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "image",
  "thiserror",
@@ -722,7 +722,7 @@ dependencies = [
 
 [[package]]
 name = "rrc-cpp"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "libc",
  "rrc-core",
@@ -730,7 +730,7 @@ dependencies = [
 
 [[package]]
 name = "rrc-kotlin"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "rrc-core",
  "thiserror",
@@ -739,7 +739,7 @@ dependencies = [
 
 [[package]]
 name = "rrc-node"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "napi",
  "napi-build",

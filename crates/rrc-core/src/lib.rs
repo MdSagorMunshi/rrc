@@ -22,7 +22,7 @@ pub mod render;
 
 // Re-exports of primary APIs
 pub use bitstream::Mode;
-pub use decoder::{decode, DecodeOptions, DecodeResult};
+pub use decoder::{decode, decode_image, DecodeOptions, DecodeResult};
 pub use encoder::{encode, EncodeOptions, RrcSymbol};
 pub use error::RrcError;
 pub use geometry::{

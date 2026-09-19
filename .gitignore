@@ -12,3 +12,4 @@ build/
 .gradle/
 .vscode/
 .idea/
+*.node

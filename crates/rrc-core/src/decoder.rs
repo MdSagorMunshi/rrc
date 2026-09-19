@@ -32,17 +32,54 @@ pub struct DecodeResult {
     pub mode: Mode,
 }
 
-/// Decode an RRC symbol from an image buffer (RGBA, RGB, or Grayscale).
+/// Decode an RRC symbol from an encoded image file buffer (PNG, JPEG, WebP, etc.).
+pub fn decode_image(
+    image_bytes: &[u8],
+    options: &DecodeOptions,
+) -> Result<DecodeResult, RrcError> {
+    let img = image::load_from_memory(image_bytes)
+        .map_err(|e| RrcError::DecodingFailed(format!("Failed to load image: {e}")))?
+        .to_rgba8();
+    let (w, h) = image::GenericImageView::dimensions(&img);
+    decode(&img.into_raw(), w, h, options)
+}
+
+/// Decode an RRC symbol from an image buffer (RGBA, RGB, Grayscale, or compressed PNG/JPEG).
 pub fn decode(
     image_data: &[u8],
     width: u32,
     height: u32,
     options: &DecodeOptions,
 ) -> Result<DecodeResult, RrcError> {
+    // If the caller accidentally passed a compressed image file (PNG/JPEG/WebP)
+    if image_data.starts_with(b"\x89PNG\r\n\x1a\n")
+        || image_data.starts_with(b"\xff\xd8\xff")
+        || image_data.starts_with(b"RIFF")
+    {
+        return decode_image(image_data, options);
+    }
+
     let gray = to_grayscale(image_data, width, height)?;
 
+    // 1. Try standard polarity (dark modules on light background)
+    match decode_from_grayscale(&gray, width, height, options) {
+        Ok(res) => Ok(res),
+        Err(e1) => {
+            // 2. Try inverted polarity (light/neon modules on dark background)
+            let inverted_gray: Vec<u8> = gray.iter().map(|&b| 255 - b).collect();
+            decode_from_grayscale(&inverted_gray, width, height, options).map_err(|_| e1)
+        }
+    }
+}
+
+fn decode_from_grayscale(
+    gray: &[u8],
+    width: u32,
+    height: u32,
+    options: &DecodeOptions,
+) -> Result<DecodeResult, RrcError> {
     // 1. Detect bullseye center and unit size
-    let bullseye = find_bullseye(&gray, width, height)?;
+    let bullseye = find_bullseye(gray, width, height)?;
     let cx = bullseye.center_x;
     let cy = bullseye.center_y;
     let u = bullseye.unit_size;
@@ -57,7 +94,7 @@ pub fn decode(
 
     for step_i in 0..360 {
         let rot = (step_i as f64) * angle_step;
-        let ring0 = sample_ring_sectors(&gray, width, height, cx, cy, u, 0, 72, rot);
+        let ring0 = sample_ring_sectors(gray, width, height, cx, cy, u, 0, 72, rot);
 
         // Primary reference gap at sector 0 and format word 1
         if ring0[0] {
@@ -241,6 +278,7 @@ pub fn decode(
 mod tests {
     use super::*;
     use crate::encoder::{encode, EncodeOptions};
+    use crate::{render_jpeg, render_png, SectorStyle};
 
     #[test]
     fn test_encode_and_decode_roundtrip_v1() {
@@ -252,5 +290,73 @@ mod tests {
         assert_eq!(decoded.payload, payload);
         assert_eq!(decoded.text.as_deref(), Some("HELLO RRC"));
         assert_eq!(decoded.version, sym.version);
+    }
+
+    #[test]
+    fn test_decode_from_png_buffer() {
+        let payload = b"PNG DECODE TEST 2026";
+        let sym = encode(payload, &EncodeOptions::default()).expect("Encode should succeed");
+        let png_bytes = render_png(sym.version, &sym.matrix, &sym.style).expect("PNG render failed");
+
+        // Test decode_image directly
+        let dec1 = decode_image(&png_bytes, &DecodeOptions::default()).expect("decode_image should succeed");
+        assert_eq!(dec1.payload, payload);
+
+        // Test decode() with auto-detection of PNG magic bytes
+        let dec2 = decode(&png_bytes, 0, 0, &DecodeOptions::default()).expect("decode should auto-detect PNG bytes");
+        assert_eq!(dec2.payload, payload);
+    }
+
+    #[test]
+    fn test_decode_from_jpeg_buffer() {
+        let payload = b"JPEG DECODE TEST 2026";
+        let sym = encode(payload, &EncodeOptions::default()).expect("Encode should succeed");
+        let jpg_bytes = render_jpeg(sym.version, &sym.matrix, &sym.style, Some(95)).expect("JPEG render failed");
+
+        let dec = decode_image(&jpg_bytes, &DecodeOptions::default()).expect("decode_image should succeed on JPEG");
+        assert_eq!(dec.payload, payload);
+    }
+
+    #[test]
+    fn test_decode_transparent_canvas_rgba() {
+        let payload = b"CANVAS TRANSPARENCY";
+        let sym = encode(payload, &EncodeOptions::default()).expect("Encode should succeed");
+        let (width, height, mut rgba) = crate::render::png::render_to_rgba(sym.version, &sym.matrix, &sym.style);
+
+        // Simulate HTML5 Canvas getImageData where background is transparent RGBA(0, 0, 0, 0)
+        for chunk in rgba.chunks_exact_mut(4) {
+            if chunk[0] > 200 && chunk[1] > 200 && chunk[2] > 200 {
+                // Background was white, make it transparent black (like cleared canvas)
+                chunk[0] = 0;
+                chunk[1] = 0;
+                chunk[2] = 0;
+                chunk[3] = 0;
+            }
+        }
+
+        let dec = decode(&rgba, width, height, &DecodeOptions::default())
+            .expect("Decoding transparent canvas RGBA should succeed");
+        assert_eq!(dec.payload, payload);
+    }
+
+    #[test]
+    fn test_decode_all_styles() {
+        let payload = b"STYLE DECODE";
+        let styles = [
+            SectorStyle::Sharp,
+            SectorStyle::Rounded,
+            SectorStyle::Pill,
+            SectorStyle::InnerRounded,
+        ];
+
+        for s in styles {
+            let mut opts = EncodeOptions::default();
+            opts.style.sector_style = s;
+            let sym = encode(payload, &opts).expect("Encode should succeed");
+            let (w, h, rgba) = crate::render::png::render_to_rgba(sym.version, &sym.matrix, &sym.style);
+            let dec = decode(&rgba, w, h, &DecodeOptions::default())
+                .unwrap_or_else(|e| panic!("Failed decoding style {s:?}: {e}"));
+            assert_eq!(dec.payload, payload);
+        }
     }
 }

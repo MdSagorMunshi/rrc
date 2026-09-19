@@ -1,9 +1,9 @@
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 use rrc_core::{
-    decode as core_decode, encode as core_encode, render_jpeg, render_png, render_svg,
-    version_info as core_version_info, Color, DecodeOptions, EccLevel, EncodeOptions,
-    SectorStyle,
+    decode as core_decode, decode_image as core_decode_image, encode as core_encode, render_jpeg,
+    render_png, render_svg, version_info as core_version_info, Color, DecodeOptions, EccLevel,
+    EncodeOptions, SectorStyle,
 };
 
 #[napi(object)]
@@ -132,7 +132,7 @@ pub fn encode_jpeg(data: Either<String, Buffer>, options: Option<JsEncodeOptions
     Ok(Buffer::from(jpg_bytes))
 }
 
-/// Decode an RRC symbol from an RGBA buffer.
+/// Decode an RRC symbol from an RGBA buffer (or compressed PNG/JPEG buffer).
 #[napi]
 pub fn decode_rgba(rgba: Buffer, width: u32, height: u32, expected_version: Option<u32>) -> Result<JsDecodeResult> {
     let dec_opts = DecodeOptions {
@@ -140,7 +140,36 @@ pub fn decode_rgba(rgba: Buffer, width: u32, height: u32, expected_version: Opti
         expected_version: expected_version.map(|v| v as u8),
     };
 
-    let res = core_decode(&rgba, width, height, &dec_opts)
+    let slice = rgba.as_ref();
+    let res = if slice.starts_with(b"\x89PNG\r\n\x1a\n")
+        || slice.starts_with(b"\xff\xd8\xff")
+        || slice.starts_with(b"RIFF")
+        || (width == 0 && height == 0)
+    {
+        core_decode_image(slice, &dec_opts)
+    } else {
+        core_decode(slice, width, height, &dec_opts)
+    }
+    .map_err(|e| Error::from_reason(e.to_string()))?;
+
+    Ok(JsDecodeResult {
+        payload: Buffer::from(res.payload),
+        text: res.text,
+        version: res.version as u32,
+        ecc_level: format!("{:?}", res.ecc_level),
+        mode: format!("{:?}", res.mode),
+    })
+}
+
+/// Decode an RRC symbol directly from an encoded image file buffer (PNG, JPEG, WebP, etc.).
+#[napi]
+pub fn decode_image(image_buffer: Buffer, expected_version: Option<u32>) -> Result<JsDecodeResult> {
+    let dec_opts = DecodeOptions {
+        verbose: false,
+        expected_version: expected_version.map(|v| v as u8),
+    };
+
+    let res = core_decode_image(image_buffer.as_ref(), &dec_opts)
         .map_err(|e| Error::from_reason(e.to_string()))?;
 
     Ok(JsDecodeResult {
@@ -150,6 +179,20 @@ pub fn decode_rgba(rgba: Buffer, width: u32, height: u32, expected_version: Opti
         ecc_level: format!("{:?}", res.ecc_level),
         mode: format!("{:?}", res.mode),
     })
+}
+
+/// Universal decode: decode from either an encoded image buffer (PNG/JPEG) or raw RGBA buffer.
+#[napi]
+pub fn decode(
+    data: Buffer,
+    width: Option<u32>,
+    height: Option<u32>,
+    expected_version: Option<u32>,
+) -> Result<JsDecodeResult> {
+    match (width, height) {
+        (Some(w), Some(h)) if w > 0 && h > 0 => decode_rgba(data, w, h, expected_version),
+        _ => decode_image(data, expected_version),
+    }
 }
 
 /// Get specifications and capacity metrics for a given RRC version.

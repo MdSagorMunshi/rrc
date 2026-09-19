@@ -12,7 +12,7 @@ description = "Node.js binding for Radial Response Code (RRC) via napi-rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-rrc-core = { path = "../rrc-core", version = "0.1.0" }
+rrc-core = { path = "../rrc-core", version = "0.1.1" }
 napi = { version = "3.1", default-features = false, features = ["napi4", "async"] }
 napi-derive = "3.1"
 

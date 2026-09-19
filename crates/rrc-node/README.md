@@ -13,7 +13,7 @@ npm install radialcode
 ## Quick Start (TypeScript / ESM)
 
 ```typescript
-import { encodeSvg, encodePng, decodeRgba, getVersionInfo } from 'radialcode';
+import { encodeSvg, encodePng, decode, decodeImage, decodeRgba, getVersionInfo } from 'radialcode';
 import * as fs from 'fs';
 
 // Query version capacity specs
@@ -36,9 +36,13 @@ const png = encodePng('https://github.com/MdSagorMunshi/rrc', {
 });
 fs.writeFileSync('badge.png', png);
 
-// 3. Decode an RGBA Buffer
-// const result = decodeRgba(rawRgbaBuffer, width, height);
-// console.log(`Decoded text: ${result.text}`);
+// 3. Decode directly from an image file (PNG / JPEG / WebP)
+const imageBuffer = fs.readFileSync('badge.png');
+const result = decodeImage(imageBuffer); // or decode(imageBuffer)
+console.log('Decoded text:', result.text);
+
+// 4. Decode from raw RGBA buffer (HTML5 Canvas / Camera frame)
+// const result = decodeRgba(canvasImageData.data, width, height);
 ```
 
 ## Documentation & Specification

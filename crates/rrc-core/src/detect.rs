@@ -24,7 +24,11 @@ pub fn to_grayscale(image_data: &[u8], width: u32, height: u32) -> Result<Vec<u8
     match bpp {
         4 => {
             for chunk in image_data.chunks_exact(4) {
-                let y = (0.299 * (chunk[0] as f32) + 0.587 * (chunk[1] as f32) + 0.114 * (chunk[2] as f32)) as u8;
+                let a = chunk[3] as f32 / 255.0;
+                let r = (chunk[0] as f32) * a + 255.0 * (1.0 - a);
+                let g = (chunk[1] as f32) * a + 255.0 * (1.0 - a);
+                let b = (chunk[2] as f32) * a + 255.0 * (1.0 - a);
+                let y = (0.299 * r + 0.587 * g + 0.114 * b) as u8;
                 gray.push(y);
             }
         }
